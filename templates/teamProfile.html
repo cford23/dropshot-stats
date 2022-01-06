@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+
+{% block title %} {{ team.teamName }} {% endblock %}
+
+{% block content %}
+<br />
+<a class="btn btn-dark btn-sm" href="{{ url_for('teamProfiles') }}" role="button">Back to Team Profiles</a>
+
+<div class="header">
+    <div class="info">
+        <h1>{{ team.teamName }}</h1>
+        <p>Last Recorded Roster: {{ team.lastRecordedRoster|join(", ") }}</p>
+        <p>Other Players: {{ team.previousPlayers|join(", ") }}</p>
+    </div>
+
+    <div class="socialMedia">
+        <!-- Instagram -->
+        {% if team.socialMedia['Instagram Username']|string != 'None' %}
+            <div class="wrap">
+                <div class="left_col">
+                    <a href="https://instagram.com/{{ team.socialMedia['Instagram Username'] }}" target="_blank">
+                        <img src="{{ url_for('static', filename='instagramLogo.png') }}" />
+                    </a>
+                </div>
+                <div class="right_col">
+                    <p></p>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Twitch -->
+        {% if team.socialMedia['Twitch Channel']|string != 'None' %}
+            <div class="wrap">
+                <div class="left_col">
+                    <a href="https://twitch.tv/{{ team.socialMedia['Twitch Channel'] }}" target="_blank">
+                        <img src="{{ url_for('static', filename='twitchLogo2.png') }}" />
+                    </a>
+                </div>
+                <div class="right_col">
+                    <p></p>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Twitter -->
+        {% if team.socialMedia['Twitter Username']|string != 'None' %}
+            <div class="wrap">
+                <div class="left_col">
+                    <a href="https://twitter.com/{{ team.socialMedia['Twitter Username'] }}" target="_blank">
+                        <img src="{{ url_for('static', filename='twitterLogo.png') }}" />
+                    </a>
+                </div>
+                <div class="right_col">
+                    <p>{{ "{:,}".format(team.twitterFollowers) }} followers</p>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- YouTube -->
+        {% if team.socialMedia['YouTube Channel']|string != 'None' %}
+            <div class="wrap">
+                <div class="left_col">
+                    <a href="{{ team.socialMedia['YouTube Channel'] }}" target="_blank">
+                        <img src="{{ url_for('static', filename='youtubeLogo.png') }}" />
+                    </a>
+                </div>
+                <div class="right_col">
+                    <p></p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<br />
+<table id="teamStats" class="table" style="text-align: center; width: 100%">
+    <thead>
+        <tr>
+            <td>Season</td>
+            <td>K/D</td>
+            <td>Kills</td>
+            <td>Deaths</td>
+            <td>Matches Played</td>
+            <td>Matches Won</td>
+            <td>Matches Lost</td>
+            <td>Maps Played</td>
+            <td>Maps Won</td>
+            <td>Maps Lost</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Overall</td>
+            <td>{{ '%.2f'| format(team.kd|float) }}</td>
+            <td>{{ team.kills }}</td>
+            <td>{{ team.deaths }}</td>
+            <td>{{ team.matchesPlayed }}</td>
+            <td>{{ team.matchWins }}</td>
+            <td>{{ team.matchLosses }}</td>
+            <td>{{ team.mapsPlayed }}</td>
+            <td>{{ team.mapWins }}</td>
+            <td>{{ team.mapLosses }}</td>
+        </tr>
+        {% for season in team.seasons|reverse %}
+            <tr>
+                <td>{{ season }}</td>
+                <td>{{ '%.2f' | format(team.teamStats[season]['kd']|float) }}</td>
+                <td>{{ team.teamStats[season]['kills'] }}</td>
+                <td>{{ team.teamStats[season]['deaths'] }}</td>
+                <td>{{ team.teamStats[season]['matchesPlayed'] }}</td>
+                <td>{{ team.teamStats[season]['matchWins'] }}</td>
+                <td>{{ team.teamStats[season]['matchLosses'] }}</td>
+                <td>{{ team.teamStats[season]['mapsPlayed'] }}</td>
+                <td>{{ team.teamStats[season]['mapWins'] }}</td>
+                <td>{{ team.teamStats[season]['mapLosses'] }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<hr />
+<center>
+    <h4>Team Matches</h4>
+</center>
+<table id="teamMatches" class="table table-striped cell-border nowrap" style="text-align: center; width: 100%;">
+    <thead>
+        <tr>
+            <td></td>
+            <td>Season</td>
+            <td>Team</td>
+            <td>Opponent</td>
+            <td>Event</td>
+            <td>Date</td>
+            <td>Team Score</td>
+            <td>Opponent Score</td>
+            <td>Winner</td>
+            <td>Match VOD</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in team.matches %}
+            <tr>
+                <td><a href="{{ url_for('matchDetails', matchID=row['Match ID']) }}">Match Details</a></td>
+                <td>{{ row['Season'] }}</td>
+                <td>{{ row['Team'] }}</td>
+                <td>{{ row['Opponent'] }}</td>
+                <td>{{ row['Event'] }}</td>
+                <td>{{ row['Date'] }}</td>
+                <td>{{ row['Team Score'] }}</td>
+                <td>{{ row['Opponent Score'] }}</td>
+                <td>{{ row['Winner'] }}</td>
+                {% if row['Match VOD']|string != 'None' %}
+                    <td>
+                        <a href="{{ row['Match VOD'] }}" target="_blank">VOD</a>
+                    </td>
+                {% else %}
+                    <td>No VOD</td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        $('#teamMatches').DataTable({
+            ordering: false,
+            scrollX: true
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %} Player Profiles {% endblock %}
+
+{% block content %}
+    <br />
+    <table id="playerProfiles" class="table table-striped cell-border nowrap" style="text-align: center; width: 100%;">
+        <thead>
+            <tr>
+                <td></td>
+                <td>Player</td>
+                <td>Last Recorded Team</td>
+                <td>Past Usernames</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in profiles %}
+                <tr>
+                    <td><a href="{{ url_for('playerProfile', playerID=row['Player ID']) }}">View Player Profile</a></td>
+                    <td>{{ row['First Name'] }} "{{ row['Username'] }}" {{ row['Last Name'] }}</td>
+                    <td>{{ row['Last Recorded Team'] }}</td>
+                    {% if row['Past Usernames']|string != 'None' %}
+                        <td>{{ row['Past Usernames'] | replace(";", ", ") }}</td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        $('#playerProfiles').DataTable({
+            ordering: false,
+            scrollX: true
+        });
+    });
+</script>
+{% endblock %}

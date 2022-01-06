@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %} Team Leaderboard {% endblock %}
+
+{% block content %}
+    <br />
+    <form active="{{ url_for('teamLeaderboard') }}" method="post">
+        <!-- Clean up so it looks better on the page -->
+        <label for="season">Seasons</label>
+        <ul class="seasonDropdown">
+            {% for season in dropdownLists['seasonList'] %}
+                <li><input type="checkbox" {% if season in selectedItems['seasons'] %} checked {% endif %} name="seasons" value="{{ season }}" />{{ season }}</li>
+            {% endfor %}
+        </ul>
+
+        <label for="opponent">Opponent</label>
+        <select id="opponent" name="opponent">
+            <option value="All" {% if selectedItems['opponent'] == 'All' %} selected {% endif %}>All</option>
+            {% for opponent in dropdownLists['teamList'] %}
+                <option value="{{ opponent }}" {% if selectedItems['opponent'] == opponent %} selected {% endif %}>{{ opponent }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="event">Event</label>
+        <select id="event" name="event">
+            <option value="All" {% if selectedItems['event'] == 'All' %} selected {% endif %}>All</option>
+            {% for event in dropdownLists['eventList'] %}
+                <option value="{{ event }}" {% if selectedItems['event'] == event %} selected {% endif %}>{{ event }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="mode">Mode</label>
+        <select id="mode" name="mode">
+            <option value="All" {% if selectedItems['mode'] == 'All' %} selected {% endif %}>All</option>
+            {% for mode in dropdownLists['modeList'] %}
+                <option value="{{ mode }}" {% if selectedItems['mode'] == mode %} selected {% endif %}>{{ mode }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="map">Map</label>
+        <select id="map" name="map">
+            <option value="All" {% if selectedItems['mapPlayed'] == 'All' %} selected {% endif %}>All</option>
+            {% for map in dropdownLists['mapList'] %}
+                <option value="{{ map }}" {% if selectedItems['mapPlayed'] == map %} selected {% endif %}>{{ map }}</option>
+            {% endfor %}
+        </select>
+
+        <button class="btn btn-dark btn-sm" type="submit">Search</button>
+    </form>
+
+    <table id="leaderboard" class="table cell-border nowrap" style="text-align: center; width: 100%;">
+        <thead>
+            <tr>
+                <td>Rank</td>
+                <td>Team</td>
+                <td>K/D</td>
+                <td>Kills</td>
+                <td>Deaths</td>
+                <td>Engagements</td>
+                <td>Difference</td>
+                <td>Maps Played</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in leaderboard %}
+                <tr>
+                    <td></td>
+                    <td>{{ teamIDList[row['Team ID']] }}</a></td>
+                    <td>{{ '%.2f'| format(row['KD']|float) }}</td>
+                    {% if row['Kills']|string == 'None' and row['Deaths']|string == 'None' %}
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    {% else %}
+                        <td>{{ row['Kills'] }}</td>
+                        <td>{{ row['Deaths'] }}</td>
+                        <td>{{ row['Engagements'] }}</td>
+                        <td>{{ row['Difference'] }}</td>
+                    {% endif %}
+                    <td>{{ row['MapsPlayed'] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(document).ready(function() {
+            var t = $('#leaderboard').DataTable( {
+                "columnDefs": [ {
+                    "searchable": false,
+                    "orderable": false,
+                    "targets": 0
+                },
+                {
+                    "searchable": true,
+                    "orderable": false,
+                    "targets": 1
+                } ],
+                "order": [[ 2, 'desc' ]]
+            } );
+        
+            t.on('order.dt', function () {
+                t.column(0, {order:'applied'}).nodes().each( function (cell, i) {
+                    cell.innerHTML = i+1;
+                } );
+            } ).draw();
+        });
+    </script>
+{% endblock %}

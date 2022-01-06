@@ -1,0 +1,49 @@
+thead {
+    font-weight: bold;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+    margin-top: 0;
+}
+
+img {
+    width: 40px;
+    height: 40px;
+}
+
+.header {
+    padding: 20px;
+}
+
+.info, .socialMedia {
+    width: 50%;
+    float: left;
+    padding: 20px;
+}
+
+.socialMedia {
+    display: table;
+}
+
+.wrap {
+    display: table-row;
+}
+
+.left_col {
+    display: table-cell;
+}
+
+.right_col {
+    display: table-cell;
+}
+
+#seasonDropdown {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.seasonDropdown {
+    list-style: none;
+}

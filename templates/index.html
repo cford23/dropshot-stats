@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %} Home {% endblock %}
+
+{% block content %}
+    <h2>View Matches</h2>
+    <p>Allows users to search all matches in seasons 2018-2021 by teams and events. Match details will provide the overall stats for the given match as well as for each map in the match.</p>
+    <p>For example, selecting the seasons 2018 - WW2 and 2019 - Black Ops 4, the team OpTic Gaming, and the opponent FaZe Clan will display all matches in those two seasons where OpTic Gaming and FaZe Clan played each other.</p>
+    <hr />
+
+    <h2>View Maps</h2>
+    <p>Allows users to search all maps from seasons 2018 through 2021 by teams, event, mode, and map. Map details are provided for each map which will show each player's stats from the selected map.</p>
+    <p>For example, selecting the seasons 2020 - Modern Warfare and 2021 - Cold War, the team Minnesota RØKKR, the opponent Toronto Ultra, and the mode Search and Destroy will display all maps in those two seasons where Minnesota RØKKR and Toronto Ultra played each other in Search and Destory.</p>
+    <hr />
+
+    <h2>Leaderboards</h2>
+    <p>Leaderboards provide a way to see players and teams ranked against each other. Users can filter the leaderboard by season, team, opponent, event, mode, and map and can rank the player results by K/D, Kills, Deaths, Engagements, Difference, or Maps Played. Team Leaderboards can be filtered by opponent, event, mode, and map.</p>
+    <p>For example for Player Leaderboard, selecting the 2021 - Cold War season and the opponent Atlanta FaZe will display each player's stats when playing against Atlanta FaZe and will rank them by K/D by default. Other stats can be ranked, either ascending or descending, by clicking on the column name at the top of the table. Please note that the number of maps played are not taken into account when ranking so a player with less than 20 maps played can end up being ranked higher than a player with 200 maps played.</p>
+    <p>Users can also use the Search box to find the ranking of a particular player or team rather than clicking through each page of results.</p>
+    <hr />
+
+    <h2>Profiles</h2>
+    <p>Profiles display some information and stats about a player or team. For each team and player, links to their Instagram, Twitch, Twitter, and YouTube pages are displayed. If a player or team doesn't have one of those accounts, then that social media won't be displayed. If the player or team has a Twitter account, then their current Twitter follower count will be displayed next to the link to their Twitter account. Getting follower/subscriber counts for the other social media accounts is being worked on. As for stats, overall stats and by season stats are displayed as well as all matches for the given player or team.</p>
+    <hr />
+{% endblock %}

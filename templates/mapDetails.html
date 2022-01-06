@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %} Map Details {% endblock %}
+
+{% block content %}
+<br />
+<a class="btn btn-dark btn-sm" href="{{ url_for('viewMaps') }}" role="button">Back to Map List</a>
+<br />
+
+<table id="mapStats" class="table cell-border nowrap" style="text-align: center; width: 100%;">
+    <thead>
+        <tr>
+            {% if mapDetails['Map']|string == 'None' %}
+                <td>Map {{ mapDetails['Map Number'] }}</td>
+            {% else %}
+                <td>Map {{ mapDetails['Map Number'] }}: {{ mapDetails['Map'] }}</td>
+            {% endif %}
+
+            {% if mapDetails['Team 1 Score']|string == 'None' and mapDetails['Team 2 Score']|string == 'None' %}
+                <td colspan="6">{{ mapDetails['Team 1'] }} | - | {{ mapDetails['Team 2'] }}</td>
+            {% else %}
+                <td colspan="6">{{ mapDetails['Team 1'] }} | {{ mapDetails['Team 1 Score'] }} - {{ mapDetails['Team 2 Score'] }} | {{ mapDetails['Team 2'] }}</td>
+            {% endif %}
+
+            {% if mapDetails['Map VOD']|string != 'None' %}
+                <td>
+                    <a href="{{ mapDetails['Map VOD'] }}" target="_blank">Map VOD</a>
+                </td>
+            {% else %}
+                <td>No Map VOD</td>
+            {% endif %}
+        </tr>
+        <tr>
+            <td>Team</td>
+            <td>Player</td>
+            <td>K/D</td>
+            <td>Kills</td>
+            <td>Deaths</td>
+            <td>Engagements</td>
+            <td>Difference</td>
+            <td>Map Result</td>
+    </thead>
+    <tbody>
+        {% for row in mapDetails['Map Stats'] %}
+            <tr>
+                <td>{{ row['Team'] }}</td>
+                <td>{{ row['Player'] }}</td>
+                {% if row['Kills']|string == 'None' and row['Deaths']|string == 'None' %}
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                {% else %}
+                    <td>{{ '%.2f'| format(row['KD']|float) }}</td>
+                    <td>{{ row['Kills'] }}</td>
+                    <td>{{ row['Deaths'] }}</td>
+                    <td>{{ row['Engagements'] }}</td>
+                    <td>{{ row['Difference'] }}</td>
+                {% endif %}
+                {% if row['Map Result']|string == 'None' %}
+                    <td></td>
+                {% else %}
+                    <td>{{ row['Map Result'] }}</td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        $('#mapStats').DataTable({
+            ordering: false,
+            scrollX: true,
+            paging: false,
+            bInfo: false,
+            searching: false
+        });
+    });
+</script>
+{% endblock %}

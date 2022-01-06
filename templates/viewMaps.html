@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+{% block title %} View Matches {% endblock %}
+
+{% block content %}
+    <br />
+    <form active="{{ url_for('viewMaps') }}" method="post">
+        <!-- Clean up so it looks better on the page -->
+        <label for="season">Seasons</label>
+        <ul class="seasonDropdown">
+            {% for season in dropdownLists['seasonList'] %}
+                <li><input type="checkbox" {% if season in selectedItems['seasons'] %} checked {% endif %} name="seasons" value="{{ season }}" />{{ season }}</li>
+            {% endfor %}
+        </ul>
+
+        <label for="team1">Team</label>
+        <select id="team1" name="team1">
+            <option value="All" {% if selectedItems['team1'] == 'All' %} selected {% endif %}>All</option>
+            {% for team in dropdownLists['teamList'] %}
+                <option value="{{ team }}" {% if selectedItems['team1'] == team %} selected {% endif %}>{{ team }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="team2">Opponent</label>
+        <select id="team2" name="team2">
+            <option value="All" {% if selectedItems['team2'] == 'All' %} selected {% endif %}>All</option>
+            {% for team in dropdownLists['teamList'] %}
+                <option value="{{ team }}" {% if selectedItems['team2'] == team %} selected {% endif %}>{{ team }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="event">Event</label>
+        <select id="event" name="event">
+            <option value="All" {% if selectedItems['event'] == 'All' %} selected {% endif %}>All</option>
+            {% for event in dropdownLists['eventList'] %}
+                <option value="{{ event }}" {% if selectedItems['event'] == event %} selected {% endif %}>{{ event }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="mode">Mode</label>
+        <select id="mode" name="mode">
+            <option value="All"{% if selectedItems['mode'] == 'All' %} selected {% endif %}>All</option>
+            {% for mode in dropdownLists['modeList'] %}
+                <option value="{{ mode }}" {% if selectedItems['mode'] == mode %} selected {% endif %}>{{ mode }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="map">Map</label>
+        <select id="map" name="map">
+            <option value="All" {% if selectedItems['mapPlayed'] == 'All' %} selected {% endif %}>All</option>
+            {% for map in dropdownLists['mapList'] %}
+                <option value="{{ map }}" {% if selectedItems['mapPlayed'] == map %} selected {% endif %}>{{ map }}</option>
+            {% endfor %}
+        </select>
+        <button class="btn btn-dark btn-sm" type="submit">Search</button>
+    </form>
+
+    <table id="maps" class="table table-striped cell-border nowrap" style="text-align: center; width: 100%;">
+        <thead>
+            <tr>
+                <td></td>
+                <td>Season</td>
+                <td>Team 1</td>
+                <td>Team 2</td>
+                <td>Event</td>
+                <td>Mode</td>
+                <td>Map</td>
+                <td>Map Number</td>
+                <td>Team 1 Score</td>
+                <td>Team 2 Score</td>
+                <td>Map Winner</td>
+                <td>Map VOD</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in maps %}
+                <tr>
+                    <td><a href="{{ url_for('mapDetails', mapID=row['Map ID']) }}">Map Details</a></td>
+                    <td>{{ row['Season'] }}</td>
+                    <td>{{ row['Team 1'] }}</td>
+                    <td>{{ row['Team 2'] }}</td>
+                    <td>{{ row['Event'] }}</td>
+                    <td>{{ row['Mode'] }}</td>
+                    {% if row['Map']|string == 'None' %}
+                        <td></td>
+                    {% else %}
+                        <td>{{ row['Map'] }}</td>
+                    {% endif %}
+                    <td>{{ row['Map Number'] }}</td>
+                    {% if row['Team 1 Score']|string == 'None' %}
+                        <td></td>
+                    {% else %}
+                        <td>{{ row['Team 1 Score'] }}</td>
+                    {% endif %}
+                    {% if row['Team 2 Score']|string == 'None' %}
+                        <td></td>
+                    {% else %}
+                        <td>{{ row['Team 2 Score'] }}</td>
+                    {% endif %}
+                    {% if row['Map Winner']|string == 'None' %}
+                        <td></td>
+                    {% else %}
+                        <td>{{ row['Map Winner'] }}</td>
+                    {% endif %}
+                    {% if row['Map VOD']|string != 'None' %}
+                        <td>
+                            <a href="{{ row['Map VOD'] }}" target="_blank">VOD</a>
+                        </td>
+                    {% else %}
+                        <td>No VOD</td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        $('#maps').DataTable({
+            ordering: false,
+            scrollX: true
+        });
+    });
+</script>
+{% endblock %}
