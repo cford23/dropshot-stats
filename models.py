@@ -666,8 +666,7 @@ class PlayerProfile():
         conn.close()
 
     def get_playerTwitterFollowers(self):
-        # Uncomment when done testing
-        # self.update_playerTwitterFollowers()
+        self.update_playerTwitterFollowers()
 
         conn = get_db_connection()
         cur = conn.cursor()
@@ -869,7 +868,6 @@ class TeamProfile():
         return teamStats
     
     def update_teamTwitterFollowers(self):
-        # maybe combine this into one function and change table/column based on parameter
         # updates twitter followers in sql table for given player
         f = open('api_secrets.json')
         secrets = json.load(f)
@@ -900,8 +898,7 @@ class TeamProfile():
         conn.close()
     
     def get_teamTwitterFollowers(self):
-        # Uncomment when done testing
-        # self.update_teamTwitterFollowers()
+        self.update_teamTwitterFollowers()
 
         conn = get_db_connection()
         cur = conn.cursor()

@@ -12,15 +12,6 @@ dropdownLists['modeList'] = get_modes()
 dropdownLists['mapList'] = get_mapList()
 playerList = get_playerList()
 
-
-##########################################################################
-#                               TODO
-#------------------------------------------------------------------------
-#   - Uncomment update_player/teamTwitterFollowers() when ready to deploy
-#
-##########################################################################
-
-
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -137,4 +128,4 @@ def teamLeaderboard():
     return render_template('teamLeaderboard.html', leaderboard=leaderboard, teamIDList=teamIDList, dropdownLists=dropdownLists, selectedItems=selectedItems)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
